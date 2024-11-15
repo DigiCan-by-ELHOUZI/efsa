@@ -14,7 +14,7 @@ from io import BytesIO
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from urllib.parse import urlparse, urljoin
-
+import os
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from flask_login import logout_user
@@ -696,6 +696,8 @@ def load_questions_from_json(filename):
         db.session.commit()
         
 if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 4000))
+    app.run(host="0.0.0.0, port=port")
     with app.app_context():
         if not Question.query.first():  
             load_questions_from_json('questions.json')
