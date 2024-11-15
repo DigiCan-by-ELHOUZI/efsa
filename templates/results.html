@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Résultats du Quiz</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        .incorrect-answer {
+            color: red;
+        }
+
+        .correct-answer {
+            color: green;
+        }
+        
+        
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Résultats du Quiz</h1>
+        
+        <!-- Affichage de l'email de l'utilisateur et du score total -->
+        <p><strong>Nom de l'utilisateur :</strong> {{ user.email }}</p>
+        <p><strong>Score total :</strong> {{ total_score }} / {{ total_questions }}</p>
+        
+        <!-- Boucle à travers les blocs de questions -->
+        {% for block_number, questions in blocks.items() %}
+            <div class="quiz-block">
+                <!-- Affichage du score du bloc -->
+                <h2>Bloc {{ block_number }} - Score : {{ block_scores[block_number] }} / {{ block_totals[block_number] }}</h2>
+                
+                <!-- Boucle à travers les questions dans chaque bloc -->
+                {% for question in questions %}
+                    <div class="question">
+                        <p><strong>{{ question.text }}</strong></p>
+                        
+                        <!-- Liste des choix de réponses -->
+                        <ul>
+                            {% for choice in question.choices %}
+                                <li class="{% if choice == question.correct_answer %}correct-answer{% elif user_answers.get(question.id) == choice %}incorrect-answer{% endif %}">
+                                    {{ choice }}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                        
+                        <!-- Affichage de la réponse donnée par l'utilisateur -->
+                        <p><strong>Votre réponse :</strong> 
+                           {% if user_answers.get(question.id) %}
+                               <span class="{% if user_answers.get(question.id) == question.correct_answer %}correct-answer{% else %}incorrect-answer{% endif %}">
+                                   {{ user_answers.get(question.id) }}
+                               </span>
+                           {% else %} Aucune réponse {% endif %}
+                        </p>
+                        
+                        <!-- Affichage de la réponse correcte -->
+                        <p><strong>Réponse correcte :</strong> 
+                           <span class="correct-answer">{{ question.correct_answer }}</span>
+                        </p>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

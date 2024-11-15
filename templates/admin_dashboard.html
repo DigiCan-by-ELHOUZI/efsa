@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tableau de Bord Admin</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+
+    <div class="container mt-5">
+        <h2 class="text-center">Tableau de Bord Admin</h2>
+        
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Email</th>
+                    <th scope="col">Identifiant</th>
+                    <th scope="col">Email envoyé</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in students %}
+                    <tr>
+                        <td>{{ student.email }}</td>
+                        <td>{{ student.identifiant }}</td>
+                        <td>{{ "Oui" if student.password else "Non" }}</td>
+                        <td>
+                            {% if not student.email_sent %}
+                            <form action="{{ url_for('send_email', user_id=student.id) }}" method="POST">
+                                <button type="submit" class="btn btn-primary">Envoyer Email</button>
+                            </form>
+                            {% else %}
+                                <span class="text-success">Email déjà envoyé</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+    </div>
+
+    <div class="container mt-5">
+        <!-- Formulaire pour ajouter un nouvel email -->
+        <h4>Envoyer les identifiants</h4>
+        <form action="{{ url_for('add_email') }}" method="POST">
+            <div class="form-group">
+                <label for="email">Email de l'étudiant</label>
+                <input type="email" id="email" name="email" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Ajouter l'email</button>
+        </form>
+       <br> 
+       <a href="{{ url_for('logout') }}" class="btn btn-secondary">Déconnexion</a>
+
+    </div>
+
+    <div class="container mt-5">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Email</th>
+                    <th>Identifiant</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in students %}
+                    <tr>
+                        <td>{{ student.email }}</td>
+                        <td>{{ student.identifiant }}</td>
+                        <td>
+                            <!-- Bouton pour voir les résultats du quiz -->
+                            <a href="{{ url_for('student_results', user_id=student.id) }}" class="btn btn-info">Voir les résultats</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>

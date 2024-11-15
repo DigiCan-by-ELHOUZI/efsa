@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz - Bloc {{ current_block }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Quiz - Bloc {{ current_block }}</h1>
+        
+        <!-- Affichage du message d'erreur -->
+        {% if error %}
+            <div class="error-message" style="color: red;">
+                <p>{{ error }}</p>
+            </div>
+        {% endif %}
+        
+        <form method="POST">
+            {% for question in questions %}
+                <div class="question">
+                    <p><strong>{{ question.text }}</strong></p>
+                    <ul>
+                        {% for choice in question.choices %}
+                        <li>
+                            <input type="radio" name="answer_{{ question.id }}" value="{{ choice }}" id="answer_{{ question.id }}_{{ loop.index }}">
+                            <label for="answer_{{ question.id }}_{{ loop.index }}">{{ choice }}</label>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endfor %}
+            <button type="submit">Passer au Bloc Suivant</button>
+            
+            
+        </form>
+    </div>
+</body>
+</html>
